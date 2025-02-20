@@ -217,8 +217,22 @@ figure {
 		}
 }
 
+h1, h2, h3, h4 {
+		margin-top: 0.7em;
+		margin-bottom: 0.3em;
+
+		&:first-child {
+				margin-top: 0;
+		}
+}
+
 h5.mainTitle {
 		margin-bottom: 0px;
+}
+
+div.flashMessages {
+		position: sticky;
+		top: 0;
 }
 
 div.clozeTextPlaceholderEditor {
@@ -232,6 +246,7 @@ div.VIAAdminModulesComponent {
 		form.searchForm {
 				label {
 						display: inline;
+						font-weight: normal;
 				}
 		}
 		
@@ -484,14 +499,32 @@ div.taskEditor {
 								max-width: 100%;
 						}
 
+						textarea {
+								width: 100%;
+								// clear: both;
+								// min-height: 80px;
+
+								&.hint {
+										width: 18em;
+								}
+						}
+
+						
 						// all levels
 						div.inputEditor {
-								select.uiStyleSelect {
-										font-size: 80%;
-										line-height: 80%;
-										height: auto;
-										padding-top: 0;
-										padding-bottom: 0;
+								div.sideTools {
+										// position: absolute;
+										// top: 2px;
+										// right: 2px;
+										float: right;
+										position: relative;
+										select.uiStyleSelect {
+												font-size: 80%;
+												line-height: 80%;
+												height: auto;
+												padding-top: 0;
+												padding-bottom: 0;
+										}
 								}
 
 								div.VIAHighlightArea {
@@ -572,6 +605,15 @@ div.taskEditor {
 								}
 						}
 
+						&.VIAGlossary {
+								div.entries {
+										span.entryTitle {
+												display: inline-block;
+												margin-right: 0.5em;
+										}
+								}
+						}
+
 						
 
 						// &.VIAPillarSnippet {
@@ -612,14 +654,6 @@ div.taskEditor {
 						}
 
 						
-						textarea {
-								width: 100%;
-								// min-height: 80px;
-
-								&.hint {
-										width: 18em;
-								}
-						}
 
 						&.insertPlaceholder {
 								background-color: lightgreen;
@@ -628,15 +662,6 @@ div.taskEditor {
 
 				}
 		}
-
-
-
-
-
-
-
-
-
 
 
 		
@@ -659,16 +684,36 @@ div.taskEditor {
 div.pillarInput {
 
 		// max-width: 72em;
+		margin-bottom: 10px;
+		position: relative;
+		clear: both;
 		
 		textarea.pillar {
 				// width: 600px;
+				padding-bottom: 2em;
+				resize: none;
 				margin-bottom: 0;
+
+				// For pillar with long lines better readability
+				&.noWrap {
+						white-space: pre;
+						overflow-x: scroll;
+						margin-bottom: 20px;
+				}
 		}
 
 		div.pillarToolbar {
-				text-align: right;
+//				text-align: right;
 				.muted();
 				font-size: 80%;
+				padding: 2px 4px;
+				//				background-color: #f3f3f3;
+				position: absolute;
+				//top: -20px;
+				bottom: 0;
+				width: 100%;
+				box-sizing: border-box;
+				border-top: 1px solid #eee;
 				a.pillarPreviewLink {
 						// position: absolute;
 						// right: 0;
@@ -676,12 +721,18 @@ div.pillarInput {
 				}
 
 				span.pillarSyntaxIndicator {
-						.badge();
-						background-color: green;
-						font-size: 90%;
+						margin-right: 5px;
 				}
 		}
 }
+
+// Can occur also outside of a text input
+span.pillarSyntaxIndicator {
+		color: darkgreen;
+		text-transform: uppercase;
+		margin: 0 3px;
+}
+
 
 div#pillarPreviewDialog {
 		transition: all 0.25s ease-out;
@@ -827,7 +878,7 @@ div.VIAPillarTesterComponent {
 		background-color: white;
 		border: 1px solid black;
 		width: 75%;
-		max-height: 80vh;
+		max-height: 90vh;
 		margin: 2em auto;
 		padding: 1em;
 		overflow-y: scroll;
@@ -859,6 +910,7 @@ div.VIAInformationComponent {
 
 .pull-right{
 		float: right;
+		position: relative; // Needed to avoid some strange hiding for mouse events, behind the next element
 }
 
 div.VIAAdminSupportComponent {
@@ -873,6 +925,21 @@ div.VIAAdminUiTextComponent {
 						&:hover {
 								background-color: #eee;
 						}
+				}
+		}
+}
+
+div.VIAAdminUsersComponent {
+		form.searchForm {
+				label {
+						display: inline;
+						font-weight: normal;
+				}
+
+				select {
+						vertical-align: top;
+						margin: 0;
+						overflow: hidden;
 				}
 		}
 }
@@ -894,6 +961,27 @@ div.listBatcher {
 		// 				padding: 0 0.5em;
 		// 		}
 		// }
+}
+
+div.VIAGlossaryEditor {
+		table.glossarEntries {
+				width: 100%;
+				td {
+						vertical-align: top;
+				}
+		}
+
+		div.largeTextareaContainer {
+				max-height: 60em;
+				overflow: auto;
+				overscroll-behavior: none;
+				margin: 0.5em 0;
+		}
+		
+		textarea.newEntriesInput {
+				min-height: 10em;
+				background-color: #f9f9f9;
+		}
 }
 
 

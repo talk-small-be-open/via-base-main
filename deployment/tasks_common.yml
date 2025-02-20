@@ -44,30 +44,31 @@
 
 
 
-  # Swap memory
-  # Ensure there is Swap memory (GemStone loves lots of memory)
-  - name: Create swap file
-    command: dd if=/dev/zero of={{swapFilePath}} conv=excl bs=1024 count={{swapFileSizeMb}}k
-    args:
-      creates: "{{swapFilePath}}"
+  # Only needed in install:
+  # # Swap memory
+  # # Ensure there is Swap memory (GemStone loves lots of memory)
+  # - name: Create swap file
+  #   command: dd if=/dev/zero of={{swapFilePath}} conv=excl bs=1024 count={{swapFileSizeMb}}k
+  #   args:
+  #     creates: "{{swapFilePath}}"
 
-  - name: Change swap file permissions
-    file: path="{{swapFilePath}}" owner=root group=root mode=0600
+  # - name: Change swap file permissions
+  #   file: path="{{swapFilePath}}" owner=root group=root mode=0600
 
-  - name: "Check swap file type"
-    command: file {{swapFilePath}}
-    register: swapfile
+  # - name: "Check swap file type"
+  #   command: file {{swapFilePath}}
+  #   register: swapfile
 
-  - name: Make swap file
-    command: "mkswap {{swapFilePath}}"
-    when: (swapfile.stdout is defined) and (swapfile.stdout.find('swap file') == -1)
+  # - name: Make swap file
+  #   command: "mkswap {{swapFilePath}}"
+  #   when: (swapfile.stdout is defined) and (swapfile.stdout.find('swap file') == -1)
 
-  - name: Write swap entry in fstab
-    mount: name=none src={{swapFilePath}} fstype=swap opts=sw passno=0 dump=0 state=present
+  # - name: Write swap entry in fstab
+  #   mount: name=none src={{swapFilePath}} fstype=swap opts=sw passno=0 dump=0 state=present
 
-  - name: Mount swap
-    command: "swapon {{swapFilePath}}"
-    when: ansible_swaptotal_mb < 1
+  # - name: Mount swap
+  #   command: "swapon {{swapFilePath}}"
+  #   when: ansible_swaptotal_mb < 1
 
 
     
@@ -122,12 +123,14 @@
   # User config
   #
   
-  - name: Copy SSH config
-    copy:
-      src: files/ssh/config
-      dest: "/home/{{remoteUser}}/.ssh/config"
-      owner: "{{remoteUser}}"
-      group: "{{remoteUser}}"
+# This is not nice, since it could overwrite the server-specific stuff. Hm, why do we need that in Ansible, anyway?
+# If needed, put it in site-specific ansible
+  # - name: Copy SSH config
+  #   copy:
+  #     src: files/ssh/config
+  #     dest: "/home/{{remoteUser}}/.ssh/config"
+  #     owner: "{{remoteUser}}"
+  #     group: "{{remoteUser}}"
 
   - name: Set up multiple authorized keys
     authorized_key:
@@ -181,6 +184,7 @@
 # possibly conflicts with running GemStone        - 'unattended-upgrades'
         - 'monit'
         - 'git'
+        - 'git-crypt'
         - 'imagemagick'
         - 'htop'
         - 'unzip'
@@ -274,7 +278,8 @@
     
   # PHP (NGINX Upload helper)
   - name: PHP for nginx
-    apt: pkg=php-fpm
+    apt:
+      name: php-fpm=2:8.1*
   - name: via php.ini settings
     copy:
       src: files/nginx/php.ini
@@ -392,7 +397,6 @@
   - name: install ngxblocker
     become_user: "root"
     shell:
-      warn: false
       cmd: |
         wget https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/install-ngxblocker -O /usr/local/sbin/install-ngxblocker
         chmod +x /usr/local/sbin/install-ngxblocker
@@ -591,6 +595,7 @@
       job: "cd {{via.installationPath}}/via_base/server && cronic ./executeSmalltalk.sh {{stoneName}} \"VIAApplicationManager current runWeeklyTasks\" "
   - name: Backup cron job
     cron:
+      disabled: "{{via.backupS3Endpoint == None}}"
       name: "Backup {{stoneName}}"
       user: "{{remoteUser}}"
       minute: "0"
@@ -598,6 +603,7 @@
       job: "cd {{via.installationPath}}/via_base/server && cronic ./backup.sh {{stoneName}} {{via.backupTarget}} {{via.backupS3Endpoint}}"
   - name: Verifying backup cron job
     cron:
+      disabled: "{{via.backupS3Endpoint == None}}"
       name: "Verifying backup {{stoneName}}"
       user: "{{remoteUser}}"
       minute: "0"
@@ -633,8 +639,8 @@
       hour: "2"
       job: "cd {{via.installationPath}}/via_base/server && cronic ./delete_old_objectlog.sh {{stoneName}}"
   - name: Run integration tests
-    when: via.integrationTest is defined
     cron:
+      disabled: "{{via.integrationTest.userEmail == None}}"
       name: "Run integration tests of {{stoneName}}"
       user: "{{remoteUser}}"
       minute: "1"
@@ -669,10 +675,10 @@
       group: "{{remoteUser}}"
 
   - name: install JMeter
+    ignore_errors: true
     shell:
-      warn: false
       cmd: |
-        curl https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.tgz | tar -C /opt/jmeter --strip-components=1 -xz
+        curl https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz | tar -C /opt/jmeter --strip-components=1 -xz
     args:
       creates: "/opt/jmeter/bin/jmeter"
 
