@@ -12,6 +12,7 @@
   become_user: "{{remoteUser}}"
   git:
     repo: "{{via.siteRepository.gitUrl}}"
+    version: "{{via.siteRepository.branch | default('master') }}"
     dest: "{{via.installationPath}}/via_site"
     accept_hostkey: yes
     update: yes

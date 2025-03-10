@@ -64,6 +64,17 @@
       group: "{{remoteUser}}"
       mode: 0644
 
+  - name: apt packages update
+    apt:
+      update_cache: yes
+
+  - name: Ensure early most basic apt packages for installation
+    apt:
+      name:
+        - 'git'
+        - 'file'
+        - 'vim'
+      state: present
 
 # Ensure there is Swap memory (GemStone loves lots of memory)
   - name: Create swap file
@@ -89,21 +100,7 @@
     when: ansible_swaptotal_mb < 1
 
     
-  #new as snap recommended - name: Add apt repo for certbot
-  #   apt_repository:
-  #     repo: ppa:certbot/certbot
       
-  - name: apt packages update
-    apt:
-      update_cache: yes
-
-  - name: Ensure early most basic apt packages for installation
-    apt:
-      name:
-        - 'git'
-        - 'file'
-        - 'vim'
-      state: present
 
     
   - name: Create basic installation folders
@@ -349,7 +346,8 @@
 
   - name: git-clone VIA site project
     become_user: "{{remoteUser}}"
-    shell: "todeIt {{stoneName}} project clone --https --local --checkout=master {{via.siteName}}"
+    shell: "todeIt {{stoneName}} project clone --https --local --checkout={{via.siteRepository.branch | default('master') }} {{via.siteName}}"
+    version: "{{via.baseRepository.branch | default('master') }}"
     args:
       chdir: "/opt/GsDevKit_home"
 #      creates: "/opt/GsDevKit_home/shared/repos/{{via.siteRepository.name}}"
