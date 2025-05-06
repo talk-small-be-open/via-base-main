@@ -144,7 +144,8 @@
         - "{{stoneName}}"
         - project
         - load
-        - --loads="\`#('default')\`"
+        # - --loads="\`#('default')\`"
+        - "--loads=`#('{{via.siteRepository.metacelloLoads | default('default') }}')`"
         - "{{via.siteName}}"
 
   # # Hack, GemStone weigert sich irgendwie zu updaten

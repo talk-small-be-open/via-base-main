@@ -372,7 +372,8 @@
         - "{{stoneName}}"
         - project
         - load
-        - --loads="\`#('default')\`"
+        # - --loads="\`#('default')\`"
+        - "--loads=`#('{{via.siteRepository.metacelloLoads | default('default') }}')`"
         - "{{via.siteName}}"
 
   - name: Register Servers in tODE
