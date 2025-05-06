@@ -42,7 +42,10 @@ duplicity restore --log-file /opt/via/log/duplicity-restore.log --verbosity noti
 # mv away the current DB
 pushd $GS_HOME/server/stones/$STONE_NAME
 mv --backup extents/extent0.dbf extents/_extent0.dbf
-gunzip -c restored/via_backup.dbf.gz > extents/extent0.dbf
+
+echo "TODO!"
+exit
+# TODO, so it like in the shrink/restore, not like this: gunzip -c restored/via_backup.dbf.gz > extents/extent0.dbf
 
 # Remove tranlogs
 rm tranlogs/tranlog*.dbf
