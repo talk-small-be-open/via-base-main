@@ -1,3 +1,5 @@
+// out: styles.css, rewrite-urls: all, clean-css: --s1, silent
+
 /* VIA Admin styles */
 
 
@@ -955,12 +957,12 @@ div.listBatcher {
 		margin: 1em 0;
 		padding: 0.5em 0;
 		background-color: #eee;
-		// div.batch {
-		// 		a {
-		// 				display: inline-block;
-		// 				padding: 0 0.5em;
-		// 		}
-		// }
+		div.batch {
+				span.previous, span.page, span.next {
+						display: inline-block;
+						padding: 0 3px;
+				}
+		}
 }
 
 div.VIAGlossaryEditor {
@@ -1014,13 +1016,3 @@ div[uk-modal] {
 }
 
 
-
-
-
-
-
-// Keep this for Emacs editor!
-// Local Variables:
-// less-css-compile-at-save: t
-// origami-fold-style: triple-braces
-// End:
