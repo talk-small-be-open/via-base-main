@@ -3,4 +3,6 @@
 STONE=$1
 PORT=$2
 
-$GS_HOME/bin/todeIt $STONE /home/seaside/gemServer --stop=seaside$PORT
+# $GS_HOME/bin/todeIt $STONE /home/seaside/gemServer --stop=seaside$PORT
+
+./executeSmalltalk.sh $STONE "(GemServer gemServerNamed: 'seaside$PORT') stopGems"
