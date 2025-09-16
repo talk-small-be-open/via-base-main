@@ -30,6 +30,7 @@ todeIt $STONE "ol clear --age=\`1 day\`"
 
 # GS Mark for collection
 todeIt $STONE gs mfc
+todeIt $STONE gs reclaimAll
 
 # Backup machen
 #todeBackup $STONE $BACKUPNAME
