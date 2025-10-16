@@ -4,3 +4,15 @@ remoteUser: "{{via_user}}"
 stoneName: "{{via.stoneName | default(via.siteName)}}"
 swapFilePath: /mnt/swapfile.swap
 swapFileSizeMb: 4000
+
+# Munin monitoring role
+# Documentation see https://github.com/geerlingguy/ansible-role-munin-node
+# TODO: Get the IP dynamically: dig +short blabla.dyndns.org
+# Es gibt die Möglichkeit im munin-node.conf den Parameter reverse_lookups auf "1" zu setzen.
+# Alle Parameter werden zu Perl Net Server weitergeschlauft. Es ist spärlich dokumentiert.
+# Dann wären allow Angaben mit Hostnamen möglich. Problem: Es geht per reverse DNS, und meine
+# dyndns Hostname wäre sowas wie *.dyn.cable.qlnet.ch.
+munin_node_allowed_ips: "{{ via.muninAllowedIps }}"
+
+# munin_node_plugins:
+#   - name: uptime

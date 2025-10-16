@@ -9,6 +9,7 @@
   become: true
   roles:
     - common
+    - { role: geerlingguy.munin-node }
   vars_files:
     - ./site/via_{{instanceName}}.yml
     - vars_common.yml

@@ -31,12 +31,17 @@
     rule: allow
     name: OpenSSH
 
-
 # Allow Mosh, robust SSH connections
 - ufw:
     rule: allow
     name: mosh
 
+# Allow munin, monitoring node client
+- name: Allow access to monitoring node with munin
+  ufw:
+    rule: allow
+    port: "4949"
+    proto: tcp
   
 - name: Allow all access to tcp port 80
   ufw:
