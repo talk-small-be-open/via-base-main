@@ -44,30 +44,31 @@
 
 
 
-  # Swap memory
-  # Ensure there is Swap memory (GemStone loves lots of memory)
-  - name: Create swap file
-    command: dd if=/dev/zero of={{swapFilePath}} conv=excl bs=1024 count={{swapFileSizeMb}}k
-    args:
-      creates: "{{swapFilePath}}"
+  # Only needed in install:
+  # # Swap memory
+  # # Ensure there is Swap memory (GemStone loves lots of memory)
+  # - name: Create swap file
+  #   command: dd if=/dev/zero of={{swapFilePath}} conv=excl bs=1024 count={{swapFileSizeMb}}k
+  #   args:
+  #     creates: "{{swapFilePath}}"
 
-  - name: Change swap file permissions
-    file: path="{{swapFilePath}}" owner=root group=root mode=0600
+  # - name: Change swap file permissions
+  #   file: path="{{swapFilePath}}" owner=root group=root mode=0600
 
-  - name: "Check swap file type"
-    command: file {{swapFilePath}}
-    register: swapfile
+  # - name: "Check swap file type"
+  #   command: file {{swapFilePath}}
+  #   register: swapfile
 
-  - name: Make swap file
-    command: "mkswap {{swapFilePath}}"
-    when: (swapfile.stdout is defined) and (swapfile.stdout.find('swap file') == -1)
+  # - name: Make swap file
+  #   command: "mkswap {{swapFilePath}}"
+  #   when: (swapfile.stdout is defined) and (swapfile.stdout.find('swap file') == -1)
 
-  - name: Write swap entry in fstab
-    mount: name=none src={{swapFilePath}} fstype=swap opts=sw passno=0 dump=0 state=present
+  # - name: Write swap entry in fstab
+  #   mount: name=none src={{swapFilePath}} fstype=swap opts=sw passno=0 dump=0 state=present
 
-  - name: Mount swap
-    command: "swapon {{swapFilePath}}"
-    when: ansible_swaptotal_mb < 1
+  # - name: Mount swap
+  #   command: "swapon {{swapFilePath}}"
+  #   when: ansible_swaptotal_mb < 1
 
 
     
@@ -122,12 +123,14 @@
   # User config
   #
   
-  - name: Copy SSH config
-    copy:
-      src: files/ssh/config
-      dest: "/home/{{remoteUser}}/.ssh/config"
-      owner: "{{remoteUser}}"
-      group: "{{remoteUser}}"
+# This is not nice, since it could overwrite the server-specific stuff. Hm, why do we need that in Ansible, anyway?
+# If needed, put it in site-specific ansible
+  # - name: Copy SSH config
+  #   copy:
+  #     src: files/ssh/config
+  #     dest: "/home/{{remoteUser}}/.ssh/config"
+  #     owner: "{{remoteUser}}"
+  #     group: "{{remoteUser}}"
 
   - name: Set up multiple authorized keys
     authorized_key:
@@ -181,6 +184,7 @@
 # possibly conflicts with running GemStone        - 'unattended-upgrades'
         - 'monit'
         - 'git'
+        - 'git-crypt'
         - 'imagemagick'
         - 'htop'
         - 'unzip'
@@ -275,19 +279,11 @@
   # PHP (NGINX Upload helper)
   - name: PHP for nginx
     apt:
-      name: php-fpm=1:7.2*
+      name: php-fpm=2:8.1*
   - name: via php.ini settings
     copy:
       src: files/nginx/php.ini
       dest: /etc/php/8.1/fpm/conf.d/99-via.ini
-      owner: 'root'
-      group: 'root'
-    notify:
-      - restart PHP
-  - name: via php-fpm.conf settings
-    copy:
-      src: files/nginx/php-fpm.conf
-      dest: /etc/php/7.2/fpm/pool.d/www.conf
       owner: 'root'
       group: 'root'
     notify:
@@ -683,7 +679,7 @@
     shell:
       warn: false
       cmd: |
-        curl https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.tgz | tar -C /opt/jmeter --strip-components=1 -xz
+        curl https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz | tar -C /opt/jmeter --strip-components=1 -xz
     args:
       creates: "/opt/jmeter/bin/jmeter"
 

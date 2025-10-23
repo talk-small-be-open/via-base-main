@@ -82,10 +82,10 @@
     when: swapfile.stdout.find('swap file') == -1
 
   - name: Write swap entry in fstab
-    mount: name=none src={{swap_file_path}} fstype=swap opts=sw passno=0 dump=0 state=present
+    mount: name=none src={{swapFilePath}} fstype=swap opts=sw passno=0 dump=0 state=present
 
   - name: Mount swap
-    command: "swapon {{swap_file_path}}"
+    command: "swapon {{swapFilePath}}"
     when: ansible_swaptotal_mb < 1
 
     
@@ -101,6 +101,8 @@
     apt:
       name:
         - 'git'
+        - 'file'
+        - 'vim'
       state: present
 
     
@@ -326,7 +328,7 @@
         - "{{stoneName}}"
         - project
         - load
-        - --loads="\`#('Base' 'Core' 'JSON' 'Email' 'Javascript' 'JQuery' 'Production' 'Zinc' 'Tests')\`"
+        - --loads="\`#('Base' 'Core' 'JSON' 'Email' 'Javascript' 'JQuery' 'JQueryUI' 'Production' 'Zinc' 'Tests')\`"
         - Seaside3
 
 
@@ -399,6 +401,10 @@
   #   args:
   #     chdir: "/opt/GsDevKit_home"
 
+
+  - name: Reboot if first time install
+    when: via_is_installed is undefined
+    ansible.builtin.reboot:
 
   #
   # Start services
