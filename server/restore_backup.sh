@@ -13,7 +13,7 @@ BACKEND=$2
 
 # Get credentials for duplicity, if any
 if [ -f "/opt/via/.duplicity.cred" ]; then
-		source "/opt/via/.duplicity.cred"
+    source "/opt/via/.duplicity.cred"
 fi
 
 # Maybe ask for name of backup? Take latest
@@ -45,7 +45,7 @@ mv --backup extents/extent0.dbf extents/_extent0.dbf
 
 echo "TODO!"
 exit
-# TODO, so it like in the shrink/restore, not like this: gunzip -c restored/via_backup.dbf.gz > extents/extent0.dbf
+# TODO, do it like in the shrink/restore, not like this: gunzip -c restored/via_backup.dbf.gz > extents/extent0.dbf
 
 # Remove tranlogs
 rm tranlogs/tranlog*.dbf
