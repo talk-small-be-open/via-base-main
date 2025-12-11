@@ -19,7 +19,7 @@ MYSELF=$(whoami)
 
 read -n 1 -p "GemStone on other server is stopped? y/n" SELECTION
 if [ $SELECTION != 'y' ]; then
-		exit
+    exit
 fi
 
 # Ensure via application is stopped
@@ -33,10 +33,10 @@ while pgrep stoned > /dev/null; do sleep 1; echo -n "."; done
 LOCAL_EXTENT="/home/$MYSELF/stone/extents/extent0.dbf"
 
 if [ -f $LOCAL_EXTENT ]; then
-	 mv --backup $LOCAL_EXTENT $LOCAL_EXTENT.bak
+   mv --backup $LOCAL_EXTENT $LOCAL_EXTENT.bak
 
-	 # Delete all local tranlogs
-	 rm /home/$MYSELF/stone/tranlogs/tranlog*.dbf
+   # Delete all local tranlogs
+   rm /home/$MYSELF/stone/tranlogs/tranlog*.dbf
 fi
 
 # Copy the extent from server
@@ -47,8 +47,8 @@ scp -C $SERVER_USER@$SERVER:~/stone/extents/extent0.dbf $LOCAL_EXTENT
 echo "Syncing the assets ..."
 rsync -rlptgoD --progress --compress --usermap=$SERVER_USER:$MYSELF $SERVER_USER@$SERVER:$ASSETS_PATH $ASSETS_PATH
 
-# # rsync GemStone code repositories
-# echo "Syncing the code repos ..."
-# rsync -rlptgoD --progress --compress --usermap=$SERVER_USER:$MYSELF $SERVER_USER@$SERVER:$REPOS_PATH $REPOS_PATH
+# rsync GemStone code repositories
+echo "Syncing the code repos ..."
+rsync -rlptgoD --progress --compress --usermap=$SERVER_USER:$MYSELF $SERVER_USER@$SERVER:$REPOS_PATH $REPOS_PATH
 
 echo "Successfully finished. You might want to do this manually: Copy the backup credentials, via_start.sh, ..."

@@ -6,5 +6,5 @@ Take this folder as a blueprint for your own deployment needs. Either use it dir
 
 It is based on Ansible with the following scheme:
 
-- Create a file inventory\_<yourprojectname>.yml as a copy from inventory\_template.yml
-- ...
+- Create a file `inventory\<yourprojectname>.yml` as a copy from `inventory\_template.yml`
+- Install the ansible role for munin: ansible-galaxy role install geerlingguy.munin-node

@@ -8,6 +8,10 @@ add_header Content-Security-Policy "connect-src https: 'self' wss://$host;";
 # Tell the browser to allow autoplay (does it have any effect?)
 add_header Permissions-Policy "autoplay=(self)";
 
+# Prevent idiots, disallow non-used http methods
+limit_except GET HEAD POST {
+  deny all;
+}
 
 proxy_pass http://haproxy_upstream;
 

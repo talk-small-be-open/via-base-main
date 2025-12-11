@@ -2,7 +2,8 @@
 set -e
 
 # TEST FIRST!
-exit
+# Tested successfully March 2025
+# exit
 
 # Verkleinert die GemStone Datenbank (shrink)
 
@@ -84,6 +85,7 @@ stopStone -b $STONE
 
 sleep 5
 
+echo "Starting the whole VIA application"
 ./via_start.sh
 
 echo "Compressing the backup dbf-file to save space"

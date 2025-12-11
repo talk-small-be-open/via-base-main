@@ -13,7 +13,7 @@ BACKEND=$2
 
 # Get credentials for duplicity, if any
 if [ -f "/opt/via/.duplicity.cred" ]; then
-		source "/opt/via/.duplicity.cred"
+    source "/opt/via/.duplicity.cred"
 fi
 
 # Maybe ask for name of backup? Take latest
@@ -42,7 +42,10 @@ duplicity restore --log-file /opt/via/log/duplicity-restore.log --verbosity noti
 # mv away the current DB
 pushd $GS_HOME/server/stones/$STONE_NAME
 mv --backup extents/extent0.dbf extents/_extent0.dbf
-gunzip -c restored/via_backup.dbf.gz > extents/extent0.dbf
+
+echo "TODO!"
+exit
+# TODO, do it like in the shrink/restore, not like this: gunzip -c restored/via_backup.dbf.gz > extents/extent0.dbf
 
 # Remove tranlogs
 rm tranlogs/tranlog*.dbf
