@@ -12,7 +12,11 @@ swapFileSizeMb: 4000
 # Alle Parameter werden zu Perl Net Server weitergeschlauft. Es ist spärlich dokumentiert.
 # Dann wären allow Angaben mit Hostnamen möglich. Problem: Es geht per reverse DNS, und meine
 # dyndns Hostname wäre sowas wie *.dyn.cable.qlnet.ch.
-munin_node_allowed_ips: "{{ via.muninAllowedIps }}"
+munin_node_allowed_ips: "{{ ['^127\\.0\\.0\\.1$', '^::1$'] + via.muninAllowedIps }}"
+# munin_node_allowed_ips: 
+#     - '^127\.0\.0\.1$'
+#     - '^::1$'
+#     - "{{via.muninAllowedIps}}"
 
 # munin_node_plugins:
 #   - name: uptime

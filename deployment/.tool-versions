@@ -1,2 +1,8 @@
+# Remark: If you have to install python libraries for *ansible* then you have to run pip from the virtual environment which is installed along ansible with asdf
+# For example:
+# In directory ~/.asdf/installs/ansible/2.9.4@3.6.15/venv/bin
+# ./pip install dnspython
+
 ansible 2.9.4@3.6.15
+
 python 3.6.15
