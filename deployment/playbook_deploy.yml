@@ -21,7 +21,6 @@
   
   # TODO
   # - name: Install maintenance screen
-  # - name: Do backup of data
 
   - import_tasks: tasks_git_update.yml
     when: gemstoneOnly is not defined
@@ -56,8 +55,14 @@
   - name: Do GemStone backup before deploy
     when: skipBackup is not defined
     become_user: "{{remoteUser}}"
-    shell: "todeBackup {{stoneName}} via_backup_before_deploy.dbf"
+    # shell: "todeBackup {{stoneName}} via_backup_before_deploy.dbf"
+    shell: "todeIt {{stoneName}} bu snapshot via_snapshot_before_deploy.dbf"
 
+  - name: gzip compress backup file
+    when: skipBackup is not defined
+    become_user: "{{remoteUser}}"
+    shell: "pigz /opt/GsDevKit_home/server/stones/{{stoneName}}/snapshots/via_snapshot_before_deploy.dbf"
+    
 # TODO 1. Do not overwrite! 2. Check if backup sucessful?
 
 
@@ -69,53 +74,6 @@
   - name: Flush Monticello cache
     become_user: "{{remoteUser}}"
     shell: "todeIt {{stoneName}} mr flush"
-
-
-  #
-  # UPDATE TO NEWEST CODE IN VIA BASE
-  # (Very strange, that we have to do that, since I thought Monticell would update subprojects as well?)
-  #
-  # - name: git-clone VIA base project
-  #   become_user: "{{remoteUser}}"
-  #   shell: "todeIt {{stoneName}} project clone --https --local --checkout=master Via"
-  #   args:
-  #     chdir: "/opt/GsDevKit_home"
-  #     creates: "/opt/GsDevKit_home/shared/repos/via-base-src"
-      
-  # - name: Update VIA base project (pull)
-  #   become_user: "{{remoteUser}}"
-  #   shell: "todeIt {{stoneName}} project pull Via"
-
-  # - name: Update VIA base project (get)
-  #   become_user: "{{remoteUser}}"
-  #   shell: "todeIt {{stoneName}} project get Via"
-
-  # # Hack, GemStone weigert sich irgendwie zu updaten
-  # - name: Monticello revert to last version (strange, why?)
-  #   become_user: "{{remoteUser}}"
-  #   shell: "todeIt {{stoneName}} mc revert {{item}}"
-  #   with_items:
-  #     - "Via"
-  #     - "Pillar-ExporterCore"
-  #     - "Pillar-ExporterHTML"
-  #     - "Pillar-ExporterPillar"
-  #     - "Pillar-Model"
-  #     - "ViaPlatformGemstone"
-  #     - "MCL-Utils-CollectionSugar"
-
-  
-  # # - name: Load VIA site project
-  # #   become_user: "{{remoteUser}}"
-  # #   command:
-  # #     argv:
-  # #       - todeIt
-  # #       - "{{stoneName}}"
-  # #       - project
-  # #       - load
-  # #       - --loads="\`#('default')\`"
-  # #       - "{{via.siteName}}"
-
-
 
 
   #
@@ -145,26 +103,9 @@
         - "{{stoneName}}"
         - project
         - load
-        # - --loads="\`#('default')\`"
         - "--loads=`#('{{via.siteRepository.metacelloLoads | default('default') }}')`"
         - "{{via.siteName}}"
 
-  # # Hack, GemStone weigert sich irgendwie zu updaten
-  # - name: Monticello revert to last version (strange, why?) BASE
-  #   become_user: "{{remoteUser}}"
-  #   shell: "todeIt {{stoneName}} mc revert {{item}}"
-  #   with_items:
-  #     - "Via"
-  #     - "Pillar-ExporterCore"
-  #     - "Pillar-ExporterHTML"
-  #     - "Pillar-ExporterPillar"
-  #     - "Pillar-Model"
-  #     - "ViaPlatformGemstone"
-  #     - "MCL-Utils-CollectionSugar"
-  #     - "MCL-Utils-Blankness"
-  #     - "{{via.siteName}}"
-        
-      
   - name: Update script inside VIA application
     become_user: "{{remoteUser}}"
     shell: "{{via.installationPath}}/via_base/server/executeSmalltalkScript.sh {{stoneName}} {{via.installationPath}}/install/updateVia.st"
