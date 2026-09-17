@@ -68,3 +68,10 @@ check device disk with path /
 # a extent file bigger than 5GB means that we could shrink it, so we use a threshold somewhere in between.
 check file gemstone_database_extent_file with path /opt/GsDevKit_home/server/stones/{{stoneName}}/extents/extent0.dbf
        if size > 8 GB then alert
+
+
+{% if via.gemStone.keyfile is defined %}
+       if size > 15 GB then alert
+{% else %}
+       if size > 8 GB then alert
+{% endif %}

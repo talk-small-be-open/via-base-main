@@ -32,6 +32,9 @@ todeIt $STONE "ol clear --age=\`1 day\`"
 todeIt $STONE gs mfc
 todeIt $STONE gs reclaimAll
 
+# Wait until some stuff settles, not sure what exactly, but dont hurry to go on to the backup
+sleep 20
+
 # Backup machen
 #todeBackup $STONE $BACKUPNAME
 # We need the "wait" option, therefore via todeIt. Then, a preceding sleep is not necessary anymore.

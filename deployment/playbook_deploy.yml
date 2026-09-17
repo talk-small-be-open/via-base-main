@@ -61,7 +61,7 @@
   - name: gzip compress backup file
     when: skipBackup is not defined
     become_user: "{{remoteUser}}"
-    shell: "pigz /opt/GsDevKit_home/server/stones/{{stoneName}}/snapshots/via_snapshot_before_deploy.dbf"
+    shell: "pigz /opt/GsDevKit_home/server/stones/{{stoneName}}/snapshots/extent0.via_snapshot_before_deploy.dbf"
     
 # TODO 1. Do not overwrite! 2. Check if backup sucessful?
 
