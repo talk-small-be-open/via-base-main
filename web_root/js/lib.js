@@ -227,6 +227,7 @@ class SessionChecker {
   predelaySec;
   checkaliveUrl;
   isDocumentHidden = false;
+  wentHiddenAt = 0;
 
   // singleton
   constructor() {
@@ -252,12 +253,19 @@ class SessionChecker {
 
   visibilityHandler() {
 
-    // made visible
+    // made invisible
     if (document.hidden) {
+      this.wentHiddenAt = Date.now();
       this.stopCheckSessionTimer();
     } else {
-      // Check immediately if WAS hidden
-      if (this.isDocumentHidden) { this.startCheckSessionTimer(2) }
+      // Check immediately if WAS hidden for longer than x seconds
+      if (this.isDocumentHidden) {
+        if ( (Date.now() - this.wentHiddenAt) > 60000 ) {
+          this.startCheckSessionTimer(1)
+        } else {
+          this.startCheckSessionTimer(60)
+        }
+      }
     }
 
     // Update state
