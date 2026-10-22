@@ -648,6 +648,7 @@
       hour: "2"
       job: "cd {{via.installationPath}}/via_base/server && cronic ./delete_old_objectlog.sh {{stoneName}}"
   - name: Run integration tests
+    when: via.integrationTest is defined
     cron:
       disabled: "{{via.integrationTest.userEmail == None}}"
       name: "Run integration tests of {{stoneName}}"
