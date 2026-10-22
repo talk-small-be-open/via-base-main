@@ -58,10 +58,15 @@
     # shell: "todeBackup {{stoneName}} via_backup_before_deploy.dbf"
     shell: "todeIt {{stoneName}} bu snapshot via_snapshot_before_deploy.dbf"
 
+#  - name: backup last zipped backup file
+#    when: skipBackup is not defined
+#    become_user: "{{remoteUser}}"
+#    shell: "rename --last '.zip' '.zip.bak' /opt/GsDevKit_home/server/stones/{{stoneName}}/snapshots/extent0.via_snapshot_before_deploy.dbf.zip"
+
   - name: gzip compress backup file
     when: skipBackup is not defined
     become_user: "{{remoteUser}}"
-    shell: "pigz /opt/GsDevKit_home/server/stones/{{stoneName}}/snapshots/extent0.via_snapshot_before_deploy.dbf"
+    shell: "pigz --force /opt/GsDevKit_home/server/stones/{{stoneName}}/snapshots/extent0.via_snapshot_before_deploy.dbf"
     
 # TODO 1. Do not overwrite! 2. Check if backup sucessful?
 
