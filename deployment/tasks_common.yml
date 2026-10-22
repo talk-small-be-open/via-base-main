@@ -277,13 +277,21 @@
 
     
   # PHP (NGINX Upload helper)
+  - name: "Add php8.2 apt repo (for Ubuntu 22 jammy)"
+    apt_repository:
+      repo: ppa:ondrej/php
+      update_cache: yes
+  - name: remove old PHP with php2shell bug
+    apt:
+      name: php8.1*
+      state: absent
   - name: PHP for nginx
     apt:
-      name: php-fpm=2:8.1*
+      name: php8.2-fpm
   - name: via php.ini settings
     copy:
       src: files/nginx/php.ini
-      dest: /etc/php/8.1/fpm/conf.d/99-via.ini
+      dest: /etc/php/8.2/fpm/conf.d/99-via.ini
       owner: 'root'
       group: 'root'
     notify:
