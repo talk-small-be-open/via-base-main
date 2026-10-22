@@ -281,13 +281,13 @@
     apt_repository:
       repo: ppa:ondrej/php
       update_cache: yes
+  - name: PHP for nginx
+    apt:
+      name: php8.2-fpm
   - name: remove old PHP with php2shell bug
     apt:
       name: php8.1*
       state: absent
-  - name: PHP for nginx
-    apt:
-      name: php8.2-fpm
   - name: via php.ini settings
     copy:
       src: files/nginx/php.ini
