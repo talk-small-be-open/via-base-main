@@ -1,7 +1,8 @@
 {% if via.useSsl %}
 
-listen 443 ssl http2;
-listen [::]:443 ssl http2;
+# OPTIMIZE: Reintroduce http2, as soon as the bug has been fixed, see https://nginx2root.com/
+listen 443 ssl;
+listen [::]:443 ssl;
 
 ssl_certificate /etc/letsencrypt/live/via/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/via/privkey.pem;
