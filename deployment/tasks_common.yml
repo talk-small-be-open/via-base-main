@@ -175,6 +175,11 @@
   # apt packages
   #
 
+  - name: "Remove php8.2 apt repo ondrej (for Ubuntu 22 jammy)"
+    apt_repository:
+      repo: ppa:ondrej/php
+      state: absent
+
   - name: Install basic apt packages
     apt:
       name:
@@ -277,13 +282,18 @@
 
     
   # PHP (NGINX Upload helper)
-  - name: "Add php8.2 apt repo (for Ubuntu 22 jammy)"
+  - name: 'key for sury'
+    apt:
+      deb: https://packages.sury.org/debsuryorg-archive-keyring.deb
+  - name: "Add php8.2 apt repo sury.org (for Ubuntu 22 jammy)"
     apt_repository:
-      repo: ppa:ondrej/php
+      repo: deb https://packages.sury.org/php/ jammy main
       update_cache: yes
   - name: PHP for nginx
     apt:
+      update_cache: yes
       name: php8.2-fpm
+      state: latest
   - name: remove old PHP with php2shell bug
     apt:
       name: php8.1*
